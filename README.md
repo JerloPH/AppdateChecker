@@ -1,7 +1,8 @@
 # AppdateChecker
 
 # Download links
-Download it [**from the releases page**](https://github.com/JerloPH/AppdateChecker/releases)
+Download it [**from the releases page**](https://github.com/JerloPH/AppdateChecker/releases) <br>
+View [requirements to run](https://github.com/JerloPH/AppdateChecker#what-does-it-need-to-run) <br>
 
 # What it is?
 It is a simple (no fancy UI) tool to fetch release information from Github with your list of FOSS Apps. <br>
