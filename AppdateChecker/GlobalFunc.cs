@@ -1,5 +1,4 @@
-﻿using RestSharp;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -87,36 +86,6 @@ namespace AppdateChecker
             }
             selectFile.Dispose();
             return ret;
-        }
-        public static bool DownloadLoop(string filePath, string urlFrom, string calledFrom, bool showAMsg = false)
-        {
-            if (string.IsNullOrWhiteSpace(urlFrom)) { return false; }
-            // Keep downloading
-            string errFrom = $"GlobalVars-DownloadLoop [calledFrom: {calledFrom}]";
-            HttpStatusCode DLStatus = HttpStatusCode.NotFound;
-            int retry = 5;
-            while (retry > 0)
-            {
-                var client = new RestClient(urlFrom);
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
-
-                var request = new RestRequest("/", Method.GET);
-                request.Timeout = 0;
-                var execute = client.Execute(request);
-                DLStatus = execute.StatusCode;
-                if (DLStatus != HttpStatusCode.OK)
-                {
-                    --retry;
-                    continue;
-                }
-                var result = execute.Content;
-                using (StreamWriter sw = new StreamWriter(filePath))
-                {
-                    sw.Write(result);
-                }
-                retry = -1;
-            }
-            return (DLStatus == HttpStatusCode.OK);
         }
     }
 }
