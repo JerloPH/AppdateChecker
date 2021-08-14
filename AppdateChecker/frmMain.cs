@@ -296,7 +296,7 @@ namespace AppdateChecker
                 }
             };
             form.ShowDialog(this);
-
+            dgridApps.Sort(dgridApps.Columns[1], ListSortDirection.Ascending);
             HideUpdated();
         }
 
