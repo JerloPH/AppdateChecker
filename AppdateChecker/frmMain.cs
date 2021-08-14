@@ -322,5 +322,15 @@ namespace AppdateChecker
                 catch { }
             }
         }
+
+        private void frmMain_Resize(object sender, EventArgs e)
+        {
+            dgridApps.Height = (int)(ClientRectangle.Height*0.8);
+            btnAdd.Top = dgridApps.Height + 16;
+            btnSave.Top = btnAdd.Top;
+            btnRefresh.Top = btnAdd.Top;
+            btnCheckUpdates.Top = btnAdd.Top;
+            cbHideUpdated.Top = btnAdd.Top;
+        }
     }
 }
