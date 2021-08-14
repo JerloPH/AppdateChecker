@@ -54,7 +54,7 @@ namespace AppdateChecker
         {
             InitializeComponent();
             Message = message;
-            Caption = caption;
+            Caption = (!String.IsNullOrWhiteSpace(caption) ? caption : "Appdate Checker");
             CenterToParent();
             pictureBox1.BackColor = Color.Transparent;
             pictureBox1.BringToFront();

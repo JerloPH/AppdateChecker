@@ -74,6 +74,7 @@ namespace AppdateChecker
             this.dgridApps.RowTemplate.Height = 29;
             this.dgridApps.Size = new System.Drawing.Size(1034, 391);
             this.dgridApps.TabIndex = 4;
+            this.dgridApps.UserDeletedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.dgridApps_UserDeletedRow);
             // 
             // btnAdd
             // 
@@ -130,7 +131,6 @@ namespace AppdateChecker
             this.cApp.HeaderText = "App Name";
             this.cApp.MinimumWidth = 6;
             this.cApp.Name = "cApp";
-            this.cApp.ReadOnly = true;
             this.cApp.Width = 140;
             // 
             // cRepoOwner
@@ -138,7 +138,6 @@ namespace AppdateChecker
             this.cRepoOwner.HeaderText = "Repo Owner";
             this.cRepoOwner.MinimumWidth = 6;
             this.cRepoOwner.Name = "cRepoOwner";
-            this.cRepoOwner.ReadOnly = true;
             this.cRepoOwner.Width = 125;
             // 
             // cRepoName
@@ -146,7 +145,6 @@ namespace AppdateChecker
             this.cRepoName.HeaderText = "Repo Name";
             this.cRepoName.MinimumWidth = 6;
             this.cRepoName.Name = "cRepoName";
-            this.cRepoName.ReadOnly = true;
             this.cRepoName.Width = 125;
             // 
             // cCurVer
@@ -154,7 +152,6 @@ namespace AppdateChecker
             this.cCurVer.HeaderText = "Current Version";
             this.cCurVer.MinimumWidth = 6;
             this.cCurVer.Name = "cCurVer";
-            this.cCurVer.ReadOnly = true;
             this.cCurVer.Width = 125;
             // 
             // cLatestVer

@@ -251,6 +251,7 @@ namespace AppdateChecker
                     }
                 };
                 form.ShowDialog(this);
+                btnRefresh.PerformClick();
             }
         }
 
@@ -302,6 +303,24 @@ namespace AppdateChecker
         private void cbHideUpdated_CheckedChanged(object sender, EventArgs e)
         {
             HideUpdated();
+        }
+
+        private void dgridApps_UserDeletedRow(object sender, DataGridViewRowEventArgs e)
+        {
+            if (e.Row != null)
+            {
+                try
+                {
+                    string uid = e.Row.Tag.ToString();
+                    var form = new frmLoading("Deleting entry", "");
+                    form.BackgroundWorker.DoWork += (sender1, e1) =>
+                    {
+                        SQLHelper.DeleteItem(uid);
+                    };
+                    form.ShowDialog(this);
+                }
+                catch { }
+            }
         }
     }
 }

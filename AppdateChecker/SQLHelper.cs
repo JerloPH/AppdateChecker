@@ -295,6 +295,17 @@ namespace AppdateChecker
             }
             return false;
         }
+        public static bool DeleteItem(string uid)
+        {
+            string caller = "SQLHelper-DeleteItem";
+            bool result = false;
+            result = ExecNonQuery($"DELETE FROM {DbTableApp} WHERE `{DbColId}`={uid}", caller);
+            if (result)
+            {
+                result = ExecNonQuery($"DELETE FROM {DbTableAppPath} WHERE `{DbColId}`={uid}", caller);
+            }
+            return result;
+        }
         //############################################# End of Class, place new methods above this line
     }
 }
