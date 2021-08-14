@@ -1,5 +1,8 @@
 # AppdateChecker
 
+# Download links
+Download it [**from the releases page**](https://github.com/JerloPH/AppdateChecker/releases)
+
 # What it is?
 It is a simple (no fancy UI) tool to fetch release information from Github with your list of FOSS Apps. <br>
 If you are a FOSS enthusiast (like myself), you might have used many apps hosted on Github. If so, this tool is for you. <br>
