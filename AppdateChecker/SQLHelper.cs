@@ -21,7 +21,7 @@ namespace AppdateChecker
 
         private static void Log(string log, string caller)
         {
-            GlobalFunc.Log($"SQLHelper-{caller}", log);
+            Logs.Log(Logs.FileDblog, $"SQLHelper-{caller}", log);
         }
         private static void Log(string log)
         {

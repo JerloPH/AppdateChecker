@@ -11,19 +11,32 @@ using System.Windows.Forms;
 
 namespace AppdateChecker
 {
-    public static class GlobalFunc
+    public static class Logs
     {
-        public static void Log(string from, Exception ex)
+        private static string FileAppLog = "";
+        private static string FileErrlog = "";
+        private static string Debuglog = "";
+
+        public static string FileDblog = "";
+
+        public static bool Initialize()
         {
-            Log(from, ex.ToString());
+            try
+            {
+                FileAppLog = Path.Combine(AppContext.BaseDirectory, "appdate.log");
+                FileErrlog = Path.Combine(AppContext.BaseDirectory, "appdate_error.log"); ;
+                FileDblog = Path.Combine(AppContext.BaseDirectory, "appdate_db.log");
+                Debuglog = Path.Combine(AppContext.BaseDirectory, "appdate_debug.log");
+                return true;
+            }
+            catch (Exception ex) { Console.WriteLine(ex.ToString()); }
+            return false;
         }
-        public static void Log(string from, string log)
+        public static void Log(string filepath, string from, string log)
         {
             if (String.IsNullOrWhiteSpace(log)) { return; }
             try
             {
-                string filepath = Path.Combine(AppContext.BaseDirectory, "appdate.log");
-                Console.WriteLine(filepath);
                 using (StreamWriter sw = File.AppendText(filepath))
                 {
                     sw.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss,fff")}]: ({from}): {log}");
@@ -31,22 +44,58 @@ namespace AppdateChecker
             }
             catch { Console.WriteLine($"[Debug]: ({from}): {log}"); }
         }
+        public static void Debug(string log)
+        {
+            Log(Debuglog, "", log);
+        }
+        public static void Debug()
+        {
+            Log(Debuglog, "", "\n####################################################################\n");
+        }
+        public static void App(string from, string log)
+        {
+            Log(FileAppLog, from, log);
+        }
+        public static void Err(string from, Exception ex)
+        {
+            Log(FileErrlog, from, ex.ToString());
+        }
+        
+    }
+    public static class GlobalFunc
+    {
+        public static void ShowMessage(string message, string caption = "Appdate Checker")
+        {
+            MessageBox.Show(message, caption);
+        }
+        public static void ShowWarning(string message, string caption = "Appdate Checker")
+        {
+            ShowMessage(message, caption);
+        }
         public static void ShowError(string from, Exception ex, bool showMsg)
         {
-            Log(from, ex.ToString());
+            Logs.Err(from, ex);
             if (showMsg && ex!=null)
             {
-                MessageBox.Show(ex.ToString(), from);
+               ShowMessage(ex.ToString(), from);
             }
         }
         public static string SanitizeVersion(string version)
         {
+            if (String.IsNullOrWhiteSpace(version))
+                return "";
+
             string ver = version;
-            if (!String.IsNullOrWhiteSpace(ver))
+            try
             {
-                ver = ver.Trim().ToLower().Replace("v", "");
-                ver = ver.Replace(" ", "").Replace(',', '.');
-                ver = ver.TrimEnd('0').TrimEnd('.');
+                ver = ver.Trim().ToLower().Replace("v", "");//System.Text.RegularExpressions.Regex.Replace(ver, "^[0-9.-]+$", "");
+                ver = ver.Trim('-').Replace(" ", "").Replace(',', '.');
+                Logs.Debug($"Sanitized FileVersion: {ver}");
+            }
+            catch (Exception ex)
+            {
+                ver = "";
+                Logs.Err("GlobalFunc-SanitizeVersion", ex);
             }
             return ver;
         }
@@ -59,6 +108,7 @@ namespace AppdateChecker
                     if (File.Exists(file))
                     {
                         var myFileVersionInfo = FileVersionInfo.GetVersionInfo(file);
+                        Logs.Debug($"Raw FileVersion: {myFileVersionInfo.FileVersion}");
                         return SanitizeVersion(myFileVersionInfo.FileVersion);
                     }
                 }

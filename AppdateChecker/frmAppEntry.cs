@@ -9,45 +9,39 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using AppdateChecker;
+using AppdateChecker.Entity;
 
 namespace AppdateChecker
 {
     public partial class frmAppEntry : Form
     {
-        public Dictionary<string, string> Result { get; set; } = null;
-        private string Uid = "";
+        public AppEntry Result { get; set; } = new AppEntry();
+        private ulong Uid = 0;
 
-        public frmAppEntry(Dictionary<string, string> Entry)
+        public frmAppEntry(AppEntry Entry)
         {
             InitializeComponent();
             if (Entry == null)
             {
-                this.Uid = "0";
                 Text = "Add New App entry";
-                Result = new Dictionary<string, string>();
-                InitiateDefaultValues();
+                Result.Uid = 0;
             }
             else
             {
                 Result = Entry;
                 Text = "Edit App Entry";
+                Uid = Result.Uid;
+                txtName.Text = Result.Name;
+                txtRepoOwner.Text = Result.RepoOwner;
+                txtRepoName.Text = Result.RepoName;
+                txtAppVersion.Text = Result.CurVer;
+                txtPath.Text = Result.Filepath;
+                txtUrl.Text = $"https://github.com/{Result.RepoOwner}/{Result.RepoName}";
             }
-        }
-        private void InitiateDefaultValues()
-        {
-            Result.Add(SQLHelper.DbColId, "");
-            Result.Add(SQLHelper.DbColName, "");
-            Result.Add(SQLHelper.DbColRepoOwner, "");
-            Result.Add(SQLHelper.DbColRepoName, "");
-            Result.Add(SQLHelper.DbColCurVer, "");
-            Result.Add(SQLHelper.DbColFilepath, "");
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            Result?.Clear();
-            Result = null;
             Close();
         }
         private void btnOk_Click(object sender, EventArgs e)
@@ -62,12 +56,13 @@ namespace AppdateChecker
                 return;
             }
 
-            Result[SQLHelper.DbColId] = this.Uid;
-            Result[SQLHelper.DbColName] = txtName.Text;
-            Result[SQLHelper.DbColRepoOwner] = txtRepoOwner.Text;
-            Result[SQLHelper.DbColRepoName] = txtRepoName.Text;
-            Result[SQLHelper.DbColCurVer] = txtAppVersion.Text;
-            Result[SQLHelper.DbColFilepath] = txtPath.Text;
+            Result.Uid = this.Uid;
+            Result.Name = txtName.Text;
+            Result.RepoOwner = txtRepoOwner.Text;
+            Result.RepoName = txtRepoName.Text;
+            Result.CurVer = txtAppVersion.Text;
+            Result.Filepath = txtPath.Text;
+            Result.IsEdited = true;
             Close();
         }
 

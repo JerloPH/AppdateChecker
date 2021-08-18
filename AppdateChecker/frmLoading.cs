@@ -39,12 +39,7 @@ namespace AppdateChecker
             get { return MaxProgressHidden; }
             set { MaxProgressHidden = value; }
         }
-        private long ProgressCountHidden = 0;
-        public long ProgressCount
-        {
-            get { return ProgressCountHidden; }
-            set { ProgressCountHidden = value; }
-        }
+        private long ProgressCount = 0;
 
         public frmLoading()
         {
@@ -81,9 +76,21 @@ namespace AppdateChecker
         }
         #endregion
         #region Public Functions
-        public void UpdateProgress(long progress)
+        public void UpdateProgress()
         {
-            BackgroundWorker.ReportProgress((int)((progress / MaxProgress) * 100), progress);
+            try
+            {
+                ProgressCount += 1;
+                decimal value = ((decimal)ProgressCount / (decimal)MaxProgress) * 100m;
+                if (ProgressCount == MaxProgress)
+                    value = 100m;
+
+                BackgroundWorker.ReportProgress((int)value, ProgressCount);
+            }
+            catch (Exception ex)
+            {
+                Logs.Err("frmLoading-UpdateProgress", ex);
+            }
         }
         #endregion
 
@@ -91,6 +98,7 @@ namespace AppdateChecker
         {
             if (BackgroundWorker.IsBusy)
                 return;
+
             lblProgress.Text = $"Progress: {ProgressCount} / {MaxProgress}";
             BackgroundWorker.RunWorkerAsync();
         }
@@ -113,21 +121,16 @@ namespace AppdateChecker
         {
             if (e.ProgressPercentage > -1 && MaxProgress > 0)
             {
-                try
+                if (lblProgress.InvokeRequired)
                 {
-                    long value = Convert.ToInt64(e.UserState);
-                    if (value > 0)
+                    lblProgress.BeginInvoke((Action) delegate
                     {
-                        ProgressCount = value;
-                    }
-                    else
-                    {
-                        ProgressCount += 1;
-                    }
+                        lblProgress.Text = $"Progress: {ProgressCount} / {MaxProgress}";
+                    });
                 }
-                catch { ProgressCount += 1; }
+                else
+                    lblProgress.Text = $"Progress: {ProgressCount} / {MaxProgress}";
             }
-            lblProgress.Text = $"Progress: {ProgressCount} / {MaxProgress}";
         }
         
         private void frmLoading_KeyDown(object sender, KeyEventArgs e)
