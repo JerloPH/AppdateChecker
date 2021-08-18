@@ -11,6 +11,7 @@
     <RepositoryType>remote</RepositoryType>
     <Description>Update checker for Apps hosted on Github</Description>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
